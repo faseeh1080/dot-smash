@@ -2,6 +2,7 @@
 #include <string>
 #include <SFML/Graphics.hpp>
 #include <random>
+#include <cmath>
 
 int generateRandomNumber(int min, int max) {
     std::random_device rd;
@@ -13,25 +14,31 @@ int generateRandomNumber(int min, int max) {
 class Dot {
 public:
     sf::CircleShape dot;
+    int radius = 50;
+    sf::Vector2i position;
 
     Dot() : dot(50) {
         dot.setFillColor(sf::Color::Green);
-        dot.setPosition(
-			generateRandomNumber(0, 1280),
-			generateRandomNumber(0, 720)
-		);
+        changePosition();
     }
     
     void changePosition() {
-		dot.setPosition(
-			generateRandomNumber(0, 1280),
-			generateRandomNumber(0, 720)
-		);
+        position.x = generateRandomNumber(0, 1280 - radius * 2);
+        position.y = generateRandomNumber(0, 720 - radius * 2);
+        dot.setPosition(position.x, position.y);
+	}
+	
+	// Returns true if 'point' is on top of the circle.
+	bool onTop(sf::Vector2i point) {
+        int dx = position.x + radius - point.x;
+        int dy = position.y + radius - point.y;
+        int distanceSquared = dx * dx + dy * dy;
+        return distanceSquared <= radius * radius;
 	}
 };
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "SFML Window", sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Dot Smash", sf::Style::Close);
 
     Dot theDot;
 
@@ -43,8 +50,10 @@ int main() {
             }
             
             if (event.type == sf::Event::MouseButtonPressed) {
-				theDot.changePosition();
-			}
+		if (theDot.onTop(sf::Mouse::getPosition(window))) {
+		    theDot.changePosition();
+		}
+	    }
         }
 
         window.clear();

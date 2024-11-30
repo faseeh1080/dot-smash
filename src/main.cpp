@@ -1,3 +1,5 @@
+#include <iostream>
+#include <string>
 #include <SFML/Graphics.hpp>
 #include <random>
 
@@ -14,8 +16,18 @@ public:
 
     Dot() : dot(50) {
         dot.setFillColor(sf::Color::Green);
-        dot.setPosition(375, 275);
+        dot.setPosition(
+			generateRandomNumber(0, 1280),
+			generateRandomNumber(0, 720)
+		);
     }
+    
+    void changePosition() {
+		dot.setPosition(
+			generateRandomNumber(0, 1280),
+			generateRandomNumber(0, 720)
+		);
+	}
 };
 
 int main() {
@@ -29,6 +41,10 @@ int main() {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
+            
+            if (event.type == sf::Event::MouseButtonPressed) {
+				theDot.changePosition();
+			}
         }
 
         window.clear();

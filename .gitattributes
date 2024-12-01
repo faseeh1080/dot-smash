@@ -1,0 +1,2 @@
+# Track files inside 'assets' with Git LFS
+bin/assets/* filter=lfs diff=lfs merge=lfs -text

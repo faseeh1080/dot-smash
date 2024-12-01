@@ -1,1 +1,2 @@
-bin/dot_smash
+# Ignore all files in the 'bin' directory. Assets will be handled by lfs. (see .gitattributes)
+bin/*

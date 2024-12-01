@@ -1,2 +1,5 @@
-# Ignore all files in the 'bin' directory. Assets will be handled by lfs. (see .gitattributes)
+# Ignore all files in the 'bin' directory.
 bin/*
+
+# Include bin/assets.
+!bin/assets

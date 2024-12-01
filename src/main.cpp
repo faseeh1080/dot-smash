@@ -40,7 +40,19 @@ public:
 int main() {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Dot Smash", sf::Style::Close);
 
-    Dot theDot;
+    Dot theDot; // The dot that has to be smashed.
+
+    // Load PlayfulTime-BLBB8.ttf.
+    sf::Font playfulTime;
+    if (!playfulTime.loadFromFile("assets/PlayfulTime-BLBB8.ttf")) {
+        std::cout << "Failed to fetch the font file." << std::endl;
+        return 1;
+    }
+
+    // Create a text object for response time.
+    sf::Text responseTime("Click the dot to start.", playfulTime, 30);
+    responseTime.setFillColor(sf::Color::White);
+    responseTime.setPosition(10, 10);
 
     while (window.isOpen()) {
         sf::Event event;
@@ -59,6 +71,7 @@ int main() {
         window.clear();
 
         window.draw(theDot.dot);
+        window.draw(responseTime);
 
         window.display();
     }

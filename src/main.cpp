@@ -50,10 +50,10 @@ int main() {
             }
             
             if (event.type == sf::Event::MouseButtonPressed) {
-		if (theDot.onTop(sf::Mouse::getPosition(window))) {
-		    theDot.changePosition();
-		}
-	    }
+                if (theDot.onTop(sf::Mouse::getPosition(window))) {
+                    theDot.changePosition();
+                }
+            }
         }
 
         window.clear();

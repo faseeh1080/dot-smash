@@ -17,14 +17,14 @@ public:
     int radius = 50;
     sf::Vector2i position;
 
-    Dot() : dot(50) {
+    Dot(sf::Vector2i resolution) : dot(50) {
         dot.setFillColor(sf::Color::Green);
-        changePosition();
+        changePosition(resolution);
     }
     
-    void changePosition() {
-        position.x = generateRandomNumber(0, 1280 - radius * 2);
-        position.y = generateRandomNumber(0, 720 - radius * 2);
+    void changePosition(sf::Vector2i resolution) {
+        position.x = generateRandomNumber(0, resolution.x - radius * 2);
+        position.y = generateRandomNumber(0, resolution.y - radius * 2);
         dot.setPosition(position.x, position.y);
 	}
 	
@@ -38,9 +38,17 @@ public:
 };
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "Dot Smash", sf::Style::Close);
+    // Create the window.
+    sf::Vector2i resolution; // Declare the window resolution.
+    resolution.x = 1280;
+    resolution.y = 720;
+    sf::RenderWindow window(
+        sf::VideoMode(resolution.x, resolution.y),
+        "Dot Smash",
+        sf::Style::Close
+    );
 
-    Dot theDot; // The dot that has to be smashed.
+    Dot theDot(resolution); // The dot that has to be smashed.
 
     // Load PlayfulTime-BLBB8.ttf.
     sf::Font playfulTime;
@@ -63,7 +71,7 @@ int main() {
             
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (theDot.onTop(sf::Mouse::getPosition(window))) {
-                    theDot.changePosition();
+                    theDot.changePosition(resolution);
                 }
             }
         }

@@ -41,10 +41,18 @@ public:
 
 class ScoreManager {
 public:
-    int totalNumberOfDots = 20;
+    int totalNumberOfDots = 10;
     int dotsRemaining = totalNumberOfDots;
+    bool gameOver = false;
     std::vector<float> responseTimes; // To calculate the average response time.
     std::chrono::high_resolution_clock::time_point start; // To calculate response time.
+
+    bool checkForGameOver() {
+        if (dotsRemaining == 0) {
+            gameOver = true;
+        }
+        return gameOver;
+    }
 
     float calculateResponseTime() {
         float responseTime;
@@ -58,7 +66,9 @@ public:
             start = end;
             responseTime = elapsed.count(); // In seconds.
         }
-        dotsRemaining -= 1;
+        if (dotsRemaining > 0) {
+            dotsRemaining -= 1;
+        }
         return responseTime;
     }
 };
@@ -102,22 +112,25 @@ int main() {
             }
             
             if (event.type == sf::Event::MouseButtonPressed) {
-                if (theDot.onTop(sf::Mouse::getPosition(window))) {
+                if (!scoreManager.checkForGameOver() && theDot.onTop(sf::Mouse::getPosition(window))) {
                     theDot.changePosition(resolution);
                     responseTime.setString(
                         "Response Time: " +
                         std::to_string(scoreManager.calculateResponseTime())
                     );
                     remaining.setString(std::to_string(scoreManager.dotsRemaining));
+                    scoreManager.checkForGameOver();
                 }
             }
         }
 
         window.clear();
 
-        window.draw(theDot.dot);
-        window.draw(responseTime);
-        window.draw(remaining);
+        if (!scoreManager.gameOver) {
+            window.draw(theDot.dot);
+            window.draw(responseTime);
+            window.draw(remaining);
+        }
 
         window.display();
     }

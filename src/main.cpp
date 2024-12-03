@@ -62,6 +62,11 @@ int main() {
     responseTime.setFillColor(sf::Color::White);
     responseTime.setPosition(10, 10);
 
+    // Create a text object for remaining dots.
+    sf::Text remaining("10", playfulTime, 60);
+    remaining.setFillColor(sf::Color::White);
+    remaining.setPosition(10, 48);
+
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -80,6 +85,7 @@ int main() {
 
         window.draw(theDot.dot);
         window.draw(responseTime);
+        window.draw(remaining);
 
         window.display();
     }

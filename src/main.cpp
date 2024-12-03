@@ -3,6 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include <random>
 #include <cmath>
+#include <chrono>
+#include <vector>
 
 int generateRandomNumber(int min, int max) {
     std::random_device rd;
@@ -37,6 +39,31 @@ public:
 	}
 };
 
+class ScoreManager {
+public:
+    int totalNumberOfDots = 20;
+    int dotsRemaining = totalNumberOfDots;
+    std::vector<float> responseTimes; // To calculate the average response time.
+    std::chrono::high_resolution_clock::time_point start; // To calculate response time.
+
+    float calculateResponseTime() {
+        float responseTime;
+        if (dotsRemaining == totalNumberOfDots) {
+            start = std::chrono::high_resolution_clock::now();
+            responseTime = 0.0f;
+        }
+        else {
+            auto end = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<float> elapsed = end - start;
+            start = end;
+            responseTime = elapsed.count(); // In seconds.
+        }
+        dotsRemaining -= 1;
+        std::cout << "Dots remaining: " << dotsRemaining << std::endl;
+        return responseTime;
+    }
+};
+
 int main() {
     // Create the window.
     sf::Vector2i resolution; // Declare the window resolution.
@@ -49,6 +76,7 @@ int main() {
     );
 
     Dot theDot(resolution); // The dot that has to be smashed.
+    ScoreManager scoreManager;
 
     // Load PlayfulTime-BLBB8.ttf.
     sf::Font playfulTime;
@@ -77,6 +105,7 @@ int main() {
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (theDot.onTop(sf::Mouse::getPosition(window))) {
                     theDot.changePosition(resolution);
+                    std::cout << "Response time: " << scoreManager.calculateResponseTime() << std::endl;
                 }
             }
         }

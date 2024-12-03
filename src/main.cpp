@@ -5,6 +5,7 @@
 #include <cmath>
 #include <chrono>
 #include <vector>
+#include <numeric>
 
 int generateRandomNumber(int min, int max) {
     std::random_device rd;
@@ -64,14 +65,27 @@ public:
             auto end = std::chrono::high_resolution_clock::now();
             std::chrono::duration<float> elapsed = end - start;
             start = end;
-            responseTime = elapsed.count(); // In seconds.
+            responseTime = elapsed.count(); // In seconds as float.
+            responseTimes.push_back(responseTime);
         }
         if (dotsRemaining > 0) {
             dotsRemaining -= 1;
         }
         return responseTime;
     }
+
+    float calculateAverageResponseTime() {
+        float sum = std::accumulate(responseTimes.begin(), responseTimes.end(), 0);
+        return sum / responseTimes.size();
+    }
 };
+
+// To change the text
+void changeAverageResponseTime(std::string newString, sf::Text& object) {
+    object.setString(newString);
+    // Update the origin
+    object.setOrigin(object.getLocalBounds().width / 2, object.getLocalBounds().height / 2);
+}
 
 int main() {
     // Create the window.
@@ -104,6 +118,23 @@ int main() {
     remaining.setFillColor(sf::Color::White);
     remaining.setPosition(10, 48);
 
+    // Game Over Text
+    sf::Text gameOver("Game Over", playfulTime, 80);
+    gameOver.setFillColor(sf::Color::White);
+    // Make it centered
+    gameOver.setOrigin(gameOver.getLocalBounds().width / 2, gameOver.getLocalBounds().height / 2);
+    gameOver.setPosition(resolution.x / 2, resolution.y / 3);
+
+    // Average Response Time Text
+    sf::Text averageResponseTime("Average Response Time: ", playfulTime, 50);
+    averageResponseTime.setFillColor(sf::Color::White);
+    // Make it centered
+    averageResponseTime.setOrigin(averageResponseTime.getLocalBounds().width / 2, averageResponseTime.getLocalBounds().height / 2);
+    averageResponseTime.setPosition(resolution.x / 2, 330);
+
+    // To determine whether we need to calculate the average response time.
+    bool calculateAverageResponseTime = false;
+
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -119,7 +150,9 @@ int main() {
                         std::to_string(scoreManager.calculateResponseTime())
                     );
                     remaining.setString(std::to_string(scoreManager.dotsRemaining));
-                    scoreManager.checkForGameOver();
+                    if (scoreManager.checkForGameOver()) {
+                        calculateAverageResponseTime = true;
+                    }
                 }
             }
         }
@@ -130,6 +163,19 @@ int main() {
             window.draw(theDot.dot);
             window.draw(responseTime);
             window.draw(remaining);
+        }
+        else {
+            window.draw(gameOver);
+            if (calculateAverageResponseTime) {
+                changeAverageResponseTime(
+                    std::to_string(
+                        scoreManager.calculateAverageResponseTime()
+                    ),
+                    averageResponseTime
+                );
+                calculateAverageResponseTime = false;
+            }
+            window.draw(averageResponseTime);
         }
 
         window.display();

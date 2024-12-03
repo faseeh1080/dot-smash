@@ -59,7 +59,6 @@ public:
             responseTime = elapsed.count(); // In seconds.
         }
         dotsRemaining -= 1;
-        std::cout << "Dots remaining: " << dotsRemaining << std::endl;
         return responseTime;
     }
 };
@@ -91,7 +90,7 @@ int main() {
     responseTime.setPosition(10, 10);
 
     // Create a text object for remaining dots.
-    sf::Text remaining("10", playfulTime, 60);
+    sf::Text remaining(std::to_string(scoreManager.dotsRemaining), playfulTime, 60);
     remaining.setFillColor(sf::Color::White);
     remaining.setPosition(10, 48);
 
@@ -105,7 +104,11 @@ int main() {
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (theDot.onTop(sf::Mouse::getPosition(window))) {
                     theDot.changePosition(resolution);
-                    std::cout << "Response time: " << scoreManager.calculateResponseTime() << std::endl;
+                    responseTime.setString(
+                        "Response Time: " +
+                        std::to_string(scoreManager.calculateResponseTime())
+                    );
+                    remaining.setString(std::to_string(scoreManager.dotsRemaining));
                 }
             }
         }

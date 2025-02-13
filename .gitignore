@@ -1,5 +1,4 @@
-# Ignore all files in the 'bin' directory.
 bin/*
-
-# Include bin/assets.
 !bin/assets
+
+.vscode/tasks.json

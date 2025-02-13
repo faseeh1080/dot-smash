@@ -1,27 +1,25 @@
-# Define paths
-SFML_DIR = c:\SFML-2.6.2
+# Define SFML directory
+SFML_DIR = /usr/include/SFML
+
+# Compiler and flags
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall -I$(SFML_DIR)/include
-LDFLAGS = -L$(SFML_DIR)/lib -lsfml-graphics -lsfml-window -lsfml-system -mwindows
+LDFLAGS = -L$(SFML_DIR)/lib -lsfml-graphics -lsfml-window -lsfml-system
 
-# Define the target executable name
-TARGET = bin/dot_smash
-
-# Define the source files
+# Source and object files
 SRC = src/main.cpp
-
-# Define the object files (from source files)
 OBJ = $(SRC:.cpp=.o)
+
+# Define the target executable name (update extension for Windows)
+TARGET = bin/dot_smash  # Use .exe on Windows if needed
 
 # Default target
 all: $(TARGET)
 
+# Build the target
 $(TARGET): $(OBJ)
 	$(CXX) -o $(TARGET) $(OBJ) $(LDFLAGS)
 
-# Commands to run after compilation.
-	del /f /q src\*.o
-
-# Compile the object files
+# Compile object files
 %.o: %.cpp
 	$(CXX) -c $(CXXFLAGS) $< -o $@

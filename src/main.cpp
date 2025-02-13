@@ -75,7 +75,7 @@ public:
     }
 
     float calculateAverageResponseTime() {
-        float sum = std::accumulate(responseTimes.begin(), responseTimes.end(), 0);
+        float sum = std::accumulate(responseTimes.begin() + 1, responseTimes.end(), 0.0f);
         return sum / responseTimes.size();
     }
 };

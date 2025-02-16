@@ -1,5 +1,5 @@
 # Define SFML directory
-SFML_DIR = /usr/include/SFML
+SFML_DIR = C:/SFML-2.6.2/
 
 # Compiler and flags
 CXX = g++
